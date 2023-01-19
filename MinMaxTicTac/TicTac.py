@@ -6,7 +6,6 @@ board = {1:' ' , 2:' ' , 3:' ',
 player = '*'
 bot  = '0'
 
-
 def check_posi_valid(board,posi):
     if board[posi] != ' ':
         print("Enter a new Position")
@@ -47,52 +46,75 @@ def check_win(board):
     return False
 
 def move_p1(board,posi):
-    board[posi] = player
-    print_board(board)
-    return check_win(board)
+        board[posi] = player
+        print_board(board)
+        return check_win(board)
 
 def move_p2(board,posi):
-    board[posi] = bot
-    print_board(board)
-    return check_win(board)
+        board[posi] = bot
+        print_board(board)
+        return check_win(board)
 
-def minmax():
-    max_score()
+def min_score(board):
+        score_min = 100000
+        if check_win(board):
+            return 100
+        if check_draw(board):
+            return 0
+        for key in board.keys():
+            if board[key] == ' ':
+                board[key] = player
+                score_min = min(max_score(board),score_min)
+                board[key] = ' '
+        return score_min
 
-    min_score()
-def max_score():
+def max_score(board):
+        score_max = -10000
+        if check_win(board):
+            return -100
+        if check_draw(board):
+            return 0
+        for key in board.keys():
+            if board[key] == ' ':
+                board[key] = bot
+      
+                score_max = max(min_score(board),score_max)
+               
+                board[key] = ' '
+        return score_max
 
-
-def min_score():
-def compute(board):
-    score = -1000
-    for key in board.keys():    
-        board[key] = bot    
-        score = max(minmax(board),score)
-
+def compute_minmax(board):
+        score = -1000
+        for key in board.keys():    
+            if board[key] == ' ':
+                board[key] = bot
+                temp_score=min_score(board)
+                board[key] = ' '
+                if temp_score > score:
+                    score = temp_score
+                    fin_key = key 
+        return fin_key
 
 if __name__ == "__main__":
-    print_board(board)
-    while True:
-        posi1 = int(input("Position for p1"))
-        posi1 = check_posi_valid(board,posi1)
+        print_board(board)
+        while True:
+            posi1 = int(input("Position for p1"))
+            posi1 = check_posi_valid(board,posi1)
 
-        if move_p1(board,posi1):
-            print("Player1 winned the game")
-            break
+            if move_p1(board,posi1):
+                print("Player1 winned the game")
+                break
 
-        if check_draw(board):
-            print("GAME IS DRAW")
-            break
+            if check_draw(board):
+                print("GAME IS DRAW")
+                break
 
-        posi2 = int(input("Position for p2"))
-        posi2 = check_posi_valid(board,posi2)
-        if move_p2(board,posi2):
-            print("Player2 winned the game")
-            break
+            bestMove = compute_minmax(board)
 
-    print("GAME OVER")
-            
-
-    
-    
+            if move_p2(board,bestMove):
+                print("Bot winned the game")
+                break
+        
+        print("GAME OVER")
+                
+        
