@@ -1,11 +1,3 @@
-board = {1:' ' , 2:' ' , 3:' ',
-        4:' ' , 5:' ' , 6:' ',
-        7:' ' , 8:' ' , 9:' '
-    }
-
-player = '*'
-bot  = '0'
-
 def check_posi_valid(board,posi):
     if board[posi] != ' ':
         print("Enter a new Position")
@@ -45,15 +37,6 @@ def check_win(board):
         return True
     return False
 
-def move_p1(board,posi):
-        board[posi] = player
-        print_board(board)
-        return check_win(board)
-
-def move_p2(board,posi):
-        board[posi] = bot
-        print_board(board)
-        return check_win(board)
 
 def min_score(board):
         score_min = 100000
@@ -96,12 +79,22 @@ def compute_minmax(board):
         return fin_key
 
 if __name__ == "__main__":
+
+        board = {1:' ' , 2:' ' , 3:' ',
+        4:' ' , 5:' ' , 6:' ',
+        7:' ' , 8:' ' , 9:' '
+        }
+
+        player = '*'
+        bot  = '0'
+
         print_board(board)
         while True:
             posi1 = int(input("Position for p1"))
             posi1 = check_posi_valid(board,posi1)
-
-            if move_p1(board,posi1):
+            board[posi1] = player
+            print_board(board)
+            if  check_win(board):
                 print("Player1 winned the game")
                 break
 
@@ -110,8 +103,9 @@ if __name__ == "__main__":
                 break
 
             bestMove = compute_minmax(board)
-
-            if move_p2(board,bestMove):
+            board[bestMove] = bot
+            print_board(board)
+            if check_win(board):
                 print("Bot winned the game")
                 break
         
